@@ -17,10 +17,7 @@
         <div class="navbar-start">
           <router-link to="/" class="navbar-item">Home</router-link>
 
-          <!-- <a class="navbar-item is-active">Home</a> -->
-
           <a class="navbar-item">Members</a>
-
           <a class="navbar-item">Achievements</a>
 
           <div class="navbar-item has-dropdown is-hoverable">
@@ -40,9 +37,27 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item">
+          <div v-if="!isAuthenticated" class="navbar-item">
             <div class="buttons">
               <router-link to="/login" class="button is-primary">Log In</router-link>
+            </div>
+          </div>
+
+          <div v-else class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              {{ userName }}
+            </a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                Settings
+              </a>
+
+              <hr class="navbar-divider">
+
+              <a @click.prevent="signOut" class="navbar-item">
+                Logout
+              </a>
             </div>
           </div>
         </div>
@@ -50,3 +65,25 @@
     </div>
   </nav>
 </template>
+
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component';
+import authHelpers from '@/helpers/authHelpers';
+
+@Options({})
+export default class Login extends Vue {
+  isAuthenticated = false;
+  userName = '';
+
+  async created() {
+    this.isAuthenticated = await authHelpers.isAuthenticated();
+    this.userName = await authHelpers.getUserName();
+  }
+
+  async signOut() {
+    await authHelpers.signOut();
+
+    this.$router.push('/login');
+  }
+}
+</script>
