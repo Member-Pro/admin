@@ -68,20 +68,28 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import authHelpers from '@/helpers/authHelpers';
+import authService from '@/services/authService';
 
-@Options({})
+@Options({
+  watch: {
+    $route: 'authenticate',
+  },
+})
 export default class Login extends Vue {
   isAuthenticated = false;
   userName = '';
 
   async created() {
-    this.isAuthenticated = await authHelpers.isAuthenticated();
-    this.userName = await authHelpers.getUserName();
+    await this.authenticate();
+  }
+
+  async authenticate() {
+    this.isAuthenticated = await authService.isAuthenticated();
+    this.userName = await authService.getUserName();
   }
 
   async signOut() {
-    await authHelpers.signOut();
+    await authService.signOut();
 
     this.$router.push('/login');
   }

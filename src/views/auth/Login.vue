@@ -7,7 +7,7 @@
         <form action="" @submit.prevent="login">
           <div class="field">
             <div class="control">
-              <input class="input" type="email" placeholder="Your Email" autofocus="" v-model="username">
+              <input class="input" type="email" placeholder="Your Email" autofocus="" autocomplete="email" v-model="username">
             </div>
           </div>
 
@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import authHelpers from '@/helpers/authHelpers';
+import authService from '@/services/authService';
 
 @Options({})
 export default class Login extends Vue {
@@ -38,7 +38,9 @@ export default class Login extends Vue {
   password = '';
 
   async login() {
-    await authHelpers.signIn(this.username, this.password);
+    await authService.signIn(this.username, this.password);
+
+    this.$router.push('/');
   }
 }
 </script>
