@@ -18,7 +18,7 @@
           <router-link to="/" class="navbar-item">Home</router-link>
 
           <a class="navbar-item">Members</a>
-          <a class="navbar-item">Achievements</a>
+          <router-link to="/achievements" class="navbar-item">Achievements</router-link>
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">

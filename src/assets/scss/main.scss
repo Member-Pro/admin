@@ -2,5 +2,15 @@
 // @import '~/node_modules/bulma/sass/utilities/derived-variables.sass';
 
 $primary: $blue;
+$body-size: 14px;
 
 @import '~bulma/bulma';
+
+h1 {
+    @extend .title;
+    // @extend .is-2;
+}
+
+.section {
+    padding: 1rem 0;
+}

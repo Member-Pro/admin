@@ -4,10 +4,17 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import authConfig from './authConfig';
+import * as filters from './helpers/filters';
 
 Auth.configure(authConfig);
 
-createApp(App).use(store).use(router).mount('#app')
+const app = createApp(App)
+  .use(store)
+  .use(router);
+
+app.config.globalProperties.$filters = filters;
+
+app.mount('#app');
 
 // Clear the console on HMR reload
 // https://stackoverflow.com/a/53867503/976042
