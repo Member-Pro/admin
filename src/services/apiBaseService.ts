@@ -1,4 +1,4 @@
-import authHelpers from '@/helpers/authHelpers';
+import authService from '@/services/authService';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const instance = axios.create({
@@ -6,7 +6,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async (config: AxiosRequestConfig) => {
-  const accessToken = await authHelpers.getAccessToken();
+  const accessToken = await authService.getAccessToken();
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
@@ -38,7 +38,7 @@ const put = (resource: string, data?: any, config?: AxiosRequestConfig): Promise
 
 const destroy = (resource: string, config?: AxiosRequestConfig): Promise<AxiosResponse> => {
   return instance.delete(resource, config);
- };
+};
 
 export default {
   get,
