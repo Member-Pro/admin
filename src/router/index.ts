@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory, NavigationGuardWithThis, RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 import authService from '@/services/authService';
-import Home from '../views/Home.vue'
+import Home from '../views/Home.vue';
 import GenericRouterBase from '@/views/GenericRouterBase.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -20,23 +20,37 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'achievementList',
-        component: () => import(/* webpackChunkName: "achievementList" */ '@/views/achievements/AchievementList.vue')
+        component: () => import(/* webpackChunkName: "achievementList" */ '@/views/achievements/AchievementList.vue'),
       },
       {
         path: 'edit/:achievementId(\\d+)',
         name: 'achievementEdit',
         component: () => import(/* webpackChunkName: "achievementEdit" */ '@/views/achievements/EditAchievement.vue'),
         props: true,
+        children: [
+          {
+            path: 'components/:componentId(\\d+)',
+            name: 'achievementEditComponentDetails',
+            components: {
+              default: () => import(/* webpackChunkName: "achievementEdit" */ '@/views/achievements/EditAchievement.vue'),
+              main: () => import(/* webpackChunkName: "achievementEdit" */ '@/components/achievements/ComponentDetails.vue'),
+            },
+            props: {
+              default: true,
+              main: true,
+            },
+          },
+        ],
       },
     ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   linkActiveClass: 'is-active',
-})
+});
 
 const onAuthRequired = async (from: RouteLocationNormalized) => {
   if (from.meta.requiresAuth && !await authService.isAuthenticated()) {

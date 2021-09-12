@@ -1,18 +1,25 @@
 import api from './apiBaseService';
-import Requirement from '@/models/achievements/requirement';
+import { RequirementModel } from '@/models/achievements/requirement';
 
 export default {
-  async findById(achievementId: number, id: number): Promise<Requirement> {
+  async findById(achievementId: number, id: number): Promise<RequirementModel> {
     const response = await api.get(`achievements/${achievementId}/components/${id}`);
 
-    const component = new Requirement(response.data);
-    return component;
+    const requirement = response.data as RequirementModel;
+    return requirement;
   },
 
-  async getAllForAchievement(achievementId: number): Promise<Requirement[]> {
+  async getAllForAchievement(achievementId: number): Promise<RequirementModel[]> {
     const response = await api.get(`achievements/${achievementId}/requirements`);
 
-    const components = response.data.map((x: any) => new Requirement(x));
-    return components;
+    const requirements = response.data as RequirementModel[];
+    return requirements;
+  },
+
+  async getForComponent(componentId: number): Promise<RequirementModel[]> {
+    const response = await api.get(`components/${componentId}/requirements`);
+
+    const requirements = response.data as RequirementModel[];
+    return requirements;
   },
 };

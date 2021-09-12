@@ -1,8 +1,8 @@
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 import { Auth } from 'aws-amplify';
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import App from './App.vue';
+import router from './router';
+import store from './store';
 import authConfig from './authConfig';
 import * as filters from './helpers/filters';
 
@@ -20,7 +20,7 @@ app.mount('#app');
 // https://stackoverflow.com/a/53867503/976042
 window.addEventListener('message', (e) => {
   if (e.data && typeof e.data === 'string' && e.data.match(/webpackHotUpdate/)) {
-    console.log('hot reload happened')
-    console.clear()
+    console.log('hot reload happened');
+    console.clear();
   }
 });

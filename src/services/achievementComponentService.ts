@@ -1,18 +1,18 @@
 import api from './apiBaseService';
-import AchievementComponent from '@/models/achievements/achievementComponent';
+import { AchievementComponentModel } from '@/models/achievements/achievementComponent';
 
 export default {
-  async findById(achievementId: number, id: number): Promise<AchievementComponent> {
+  async findById(achievementId: number, id: number): Promise<AchievementComponentModel> {
     const response = await api.get(`achievements/${achievementId}/components/${id}`);
 
-    const component = new AchievementComponent(response.data);
+    const component = response.data as AchievementComponentModel;
     return component;
   },
 
-  async getAllForAchievement(achievementId: number): Promise<AchievementComponent[]> {
+  async getAllForAchievement(achievementId: number): Promise<AchievementComponentModel[]> {
     const response = await api.get(`achievements/${achievementId}/components`);
 
-    const components = response.data.map((x: any) => new AchievementComponent(x));
+    const components = response.data as AchievementComponentModel[];
     return components;
   },
 };

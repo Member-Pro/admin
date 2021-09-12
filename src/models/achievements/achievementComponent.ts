@@ -10,4 +10,4 @@ export interface AchievementComponentModel extends BaseModel {
   createdOn: string;
   updatedOn: string;
   requirements: RequirementModel[];
-};
+}

@@ -11,7 +11,11 @@
       </thead>
       <tbody>
         <tr v-for="achievement in achievements" :key="achievement.id">
-          <td>{{ achievement.name }}</td>
+          <td>
+            <router-link :to="{ name: 'achievementEdit', params: { achievementId: achievement.id } }">
+              {{ achievement.name }}
+            </router-link>
+          </td>
           <td>{{ achievement.isDisabled ? 'Yes' : 'No' }}</td>
           <td :title="$filters.timestamp(achievement.updatedOn)">{{ $filters.relativeTime(achievement.updatedOn) }}</td>
           <td>
