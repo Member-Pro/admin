@@ -1,10 +1,27 @@
+import { orderBy } from 'lodash';
 import { AchievementModel } from '@/models/achievements/achievement';
 import { AchievementComponentModel } from '@/models/achievements/achievementComponent';
-import { RequirementModel } from '@/models/achievements/requirement';
+import { RequirementModel, RequirementType } from '@/models/achievements/requirement';
 import achievementComponentService from '@/services/achievementComponentService';
 import achievementRequirementService from '@/services/achievementRequirementService';
 import achievementService from '@/services/achievementService';
+import { CommitStateFunction } from '../helpers';
 
+const getDefaultEditRequirementModel = (): RequirementModel => {
+  return {
+    id: 0,
+    componentId: 0,
+    name: '',
+    description: '',
+    displayOrder: 1,
+
+    validatorTypeName: '',
+    validationParameters: [],
+    type: RequirementType.Completion,
+    minCount: null,
+    maxCount: null,
+  };
+};
 interface EditAchevementState {
   isLoading: boolean;
   isSaving: boolean;
@@ -15,6 +32,7 @@ interface EditAchevementState {
   requirements: RequirementModel[];
 
   showEditRequirementModal: boolean;
+  editingRequirement: RequirementModel | null;
 }
 
 const state: EditAchevementState = {
@@ -27,6 +45,7 @@ const state: EditAchevementState = {
   requirements: [],
 
   showEditRequirementModal: false,
+  editingRequirement: getDefaultEditRequirementModel(),
 };
 
 const getters = {
@@ -36,9 +55,10 @@ const getters = {
   achievement: (state: EditAchevementState) => state.achievement,
   components: (state: EditAchevementState) => state.components,
   component: (state: EditAchevementState) => state.component,
-  requirements: (state: EditAchevementState) => state.requirements,
+  requirements: (state: EditAchevementState) => orderBy(state.requirements, [ 'displayOrder' ]),
 
   showEditRequirementModal: (state: EditAchevementState) => state.showEditRequirementModal,
+  editingRequirement: (state: EditAchevementState) => state.editingRequirement,
 };
 
 const mutations = {
@@ -68,6 +88,10 @@ const mutations = {
 
   SET_SHOW_EDIT_REQUIREMENT_MODAL(state: EditAchevementState, value: boolean) {
     state.showEditRequirementModal = value;
+  },
+
+  SET_EDITING_REQUIREMENT(state: EditAchevementState, value: RequirementModel | null) {
+    state.editingRequirement = value;
   },
 };
 
@@ -113,6 +137,37 @@ const actions = {
     commit('SET_REQUIREMENTS', requirements);
 
     commit('SET_IS_LOADING', false);
+  },
+
+  async saveRequirement({ commit, dispatch, state }: { commit: any, dispatch: any, state: EditAchevementState }): Promise<void> {
+    // TODO: this appears to be firing twice...
+    console.log('save requirement', state.editingRequirement);
+
+    if (state.editingRequirement?.id === 0) {
+      state.editingRequirement.componentId = state.component?.id ?? 0;
+      const newRequirement = await achievementRequirementService.create(state.editingRequirement);
+
+      // Add the new requirement to state
+      commit('SET_REQUIREMENTS', [ ...state.requirements, newRequirement ]);
+      dispatch('closeRequirementEditor');
+    }
+  },
+
+  async deleteRequirement({ commit, state }: CommitStateFunction<EditAchevementState>, { requirementId } : { requirementId: number }): Promise<void> {
+    await achievementRequirementService.delete(requirementId);
+
+    const updatedReqs = state.requirements.filter(x => x.id !== requirementId);
+    commit('SET_REQUIREMENTS', updatedReqs);
+  },
+
+  addRequirement({ commit }): void {
+    commit('SET_SHOW_EDIT_REQUIREMENT_MODAL', true);
+    commit('SET_EDITING_REQUIREMENT', getDefaultEditRequirementModel());
+  },
+
+  closeRequirementEditor({ commit }): void {
+    commit('SET_SHOW_EDIT_REQUIREMENT_MODAL', false);
+    commit('SET_EDITING_REQUIREMENT', {} as RequirementModel);
   },
 };
 

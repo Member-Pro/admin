@@ -2,7 +2,7 @@
   <div class="app">
     <main-nav />
 
-    <section class="body container">
+    <section class="body container is-clipped">
       <div class="section">
         <router-view/>
       </div>

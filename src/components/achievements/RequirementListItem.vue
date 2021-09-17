@@ -1,0 +1,60 @@
+<template>
+  <div class="box">
+    <div class="level is-mobile">
+      <div class="left">
+        <div class="level-item">
+          <h4 class="mb-3">{{ requirement.name }}</h4>
+        </div>
+      </div>
+      <div class="right">
+        <div class="level-item">
+          <div class="buttons">
+            <button class="button is-light">Copy</button>
+            <button class="button is-light">Edit</button>
+            <button class="button is-danger is-light" @click="deleteReq">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="block has-text-grey-light">
+      {{ requirement.description ? requirement.description : '<i>No description</i>' }}
+    </p>
+
+    <div class="validation-parameters px-4">
+      <h5 class="mb-2">Validation Parameters</h5>
+
+      <requirement-param-table :requirement="requirement" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
+import { RequirementModel } from '@/models/achievements/requirement';
+import RequirementParamTable from './RequirementParamTable.vue';
+
+const editAchievementModule = namespace('editAchievement');
+
+@Options({
+  components: {
+    RequirementParamTable,
+  },
+})
+export default class RequirementListItem extends Vue {
+  @Prop({ required: true })
+  requirement!: RequirementModel;
+
+  @editAchievementModule.Action('deleteRequirement')
+  deleteRequirement!: any;
+
+  async deleteReq() {
+    // TODO: Replace with nicer confirm
+    if (confirm('Are you sure you want to delete this requirement?')) {
+      this.deleteRequirement({ requirementId: this.requirement.id });
+    }
+  }
+}
+</script>
