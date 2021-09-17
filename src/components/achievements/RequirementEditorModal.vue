@@ -1,70 +1,55 @@
 <template>
-  <div class="requirement-editor-modal-wrapper"> <!-- `is-clipped` is for the modal -->
+  <div class="requirement-editor-modal-wrapper">
     <form @submit.prevent="save">
-      <div :class="[ { 'is-active': showEditRequirementModal } , 'modal']">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">
-              {{ modalTitle }}
-            </p>
-            <button class="delete" aria-label="close" @click="close"></button>
-          </header>
-          <section class="modal-card-body">
-            <text-box
-              type="text"
-              fieldId="requirement-name"
-              label="Name"
-              placeholder="Requirement Name"
-              v-model="model.name"
-              autocomplete="off"
-            />
+      <card-modal :visible="showEditRequirementModal" :title="modalTitle" @close="close">
+        <text-box
+          type="text"
+          fieldId="requirement-name"
+          label="Name"
+          placeholder="Requirement Name"
+          v-model="model.name"
+          autocomplete="off"
+        />
 
-            <text-area
-              label="Description"
-              rows="4"
-              fieldId="requirement-description"
-              placeholder="Briefly describe the requirement"
-              v-model="model.description"
-            />
+        <text-area
+          label="Description"
+          rows="4"
+          fieldId="requirement-description"
+          placeholder="Briefly describe the requirement"
+          v-model="model.description"
+        />
 
-            <drop-down
-              fieldCssClass="select"
-              label="Requirement Type"
-              fieldId="requirement-requirementType"
-              v-model="model.requirementType"
-            >
-              <option v-for="opt in requirementTypeOptions" :key="opt.value" :value="opt.value">
-                {{ opt.text }}
-              </option>
-            </drop-down>
+        <drop-down
+          fieldCssClass="select"
+          label="Requirement Type"
+          fieldId="requirement-requirementType"
+          v-model="model.requirementType"
+        >
+          <option v-for="opt in requirementTypeOptions" :key="opt.value" :value="opt.value">
+            {{ opt.text }}
+          </option>
+        </drop-down>
 
-            <text-box
-              type="number"
-              fieldId="requirement-displayOrder"
-              label="Display Order"
-              placeholder="1"
-              v-model="model.displayOrder"
-              autocomplete="off"
-            />
+        <text-box
+          type="number"
+          fieldId="requirement-displayOrder"
+          label="Display Order"
+          placeholder="1"
+          v-model="model.displayOrder"
+          autocomplete="off"
+        />
 
-            <drop-down
-              fieldCssClass="select"
-              label="Validator Type"
-              fieldId="requirement-validatorType"
-              v-model="model.validatorTypeName"
-            >
-              <option v-for="opt in validatorOptions" :key="opt.value" :value="opt.value">
-                {{ opt.text }}
-              </option>
-            </drop-down>
-          </section>
-          <footer class="modal-card-foot">
-            <button type="submit" class="button is-success">Save changes</button>
-            <button type="reset" class="button" @click="close">Cancel</button>
-          </footer>
-        </div>
-      </div>
+        <drop-down
+          fieldCssClass="select"
+          label="Validator Type"
+          fieldId="requirement-validatorType"
+          v-model="model.validatorTypeName"
+        >
+          <option v-for="opt in validatorOptions" :key="opt.value" :value="opt.value">
+            {{ opt.text }}
+          </option>
+        </drop-down>
+      </card-modal>
     </form>
 
   </div>
@@ -74,6 +59,7 @@
 import { Options, Vue } from 'vue-class-component';
 import { namespace } from 'vuex-class';
 import { RequirementModel } from '@/models/achievements/requirement';
+import CardModal from '@/components/common/CardModal.vue';
 import DropDown from '@/components/forms/DropDown.vue';
 import TextArea from '@/components/forms/TextArea.vue';
 import TextBox from '@/components/forms/TextBox.vue';
@@ -82,6 +68,7 @@ const editAchievementModule = namespace('editAchievement');
 
 @Options({
   components: {
+    CardModal,
     DropDown,
     TextArea,
     TextBox,
