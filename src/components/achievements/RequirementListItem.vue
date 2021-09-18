@@ -10,7 +10,7 @@
         <div class="level-item">
           <div class="buttons">
             <button class="button is-light">Copy</button>
-            <button class="button is-light">Edit</button>
+            <button class="button is-light" @click="edit">Edit</button>
             <button class="button is-danger is-light" @click="deleteReq">Delete</button>
           </div>
         </div>
@@ -47,8 +47,15 @@ export default class RequirementListItem extends Vue {
   @Prop({ required: true })
   requirement!: RequirementModel;
 
+  @editAchievementModule.Action('editRequirement')
+  editRequirement!: any;
+
   @editAchievementModule.Action('deleteRequirement')
   deleteRequirement!: any;
+
+  edit() {
+    this.editRequirement({ requirementId: this.requirement.id });
+  }
 
   async deleteReq() {
     // TODO: Replace with nicer confirm

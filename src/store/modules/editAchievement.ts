@@ -140,8 +140,7 @@ const actions = {
   },
 
   async saveRequirement({ commit, dispatch, state }: { commit: any, dispatch: any, state: EditAchevementState }): Promise<void> {
-    // TODO: this appears to be firing twice...
-    console.log('save requirement', state.editingRequirement);
+    // TODO: updating the `type`  property changes its type to a string instead of a number and results in a 400 response
 
     if (state.editingRequirement?.id === 0) {
       state.editingRequirement.componentId = state.component?.id ?? 0;
@@ -149,8 +148,11 @@ const actions = {
 
       // Add the new requirement to state
       commit('SET_REQUIREMENTS', [ ...state.requirements, newRequirement ]);
-      dispatch('closeRequirementEditor');
+    } else if (state.editingRequirement) {
+      await achievementRequirementService.update(state.editingRequirement);
     }
+
+    dispatch('closeRequirementEditor');
   },
 
   async deleteRequirement({ commit, state }: CommitStateFunction<EditAchevementState>, { requirementId } : { requirementId: number }): Promise<void> {
@@ -163,6 +165,13 @@ const actions = {
   addRequirement({ commit }): void {
     commit('SET_SHOW_EDIT_REQUIREMENT_MODAL', true);
     commit('SET_EDITING_REQUIREMENT', getDefaultEditRequirementModel());
+  },
+
+  editRequirement({ commit, state }: CommitStateFunction<EditAchevementState>, { requirementId } : { requirementId: number }): void {
+    const requirement = state.requirements.find(x => x.id === requirementId);
+
+    commit('SET_SHOW_EDIT_REQUIREMENT_MODAL', true);
+    commit('SET_EDITING_REQUIREMENT', requirement);
   },
 
   closeRequirementEditor({ commit }): void {

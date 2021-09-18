@@ -23,7 +23,7 @@
           fieldCssClass="select"
           label="Requirement Type"
           fieldId="requirement-requirementType"
-          v-model="model.requirementType"
+          v-model="model.type"
         >
           <option v-for="opt in requirementTypeOptions" :key="opt.value" :value="opt.value">
             {{ opt.text }}
@@ -105,7 +105,7 @@ export default class RequirementEditorModal extends Vue {
   // TODO: Get from API
   get validatorOptions(): any[] {
     return [
-      { value: 'Default', text: 'Default' },
+      { value: 'RequirementParameterValidator', text: 'Default' },
       { value: 'Custom', text: 'Custom' },
     ];
   }
@@ -113,10 +113,10 @@ export default class RequirementEditorModal extends Vue {
   get requirementTypeOptions(): any[] {
     // TODO: Pull directly from `RequirementType`
     return [
-      { value: '1', text: 'Completion' },
-      { value: '2', text: 'Score' },
-      { value: '5', text: 'Count' },
-      { value: '10', text: 'Verifications' },
+      { value: 1, text: 'Completion' },
+      { value: 2, text: 'Score' },
+      { value: 5, text: 'Count' },
+      { value: 10, text: 'Verifications' },
     ];
   }
 }
