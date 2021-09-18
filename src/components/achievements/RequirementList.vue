@@ -3,17 +3,20 @@
     <div class="level is-mobile mb-3">
       <div class="left">
         <div class="level-item">
-          <h3>Requirements</h3>
+          <h3 class="title is-3">
+            Requirements
+          </h3>
         </div>
       </div>
       <div class="right">
         <div class="level-item">
-          <button class="button is-success is-light" @click.prevent="addRequirement">Add Requirement</button>
+          <button class="button is-success" @click.prevent="addRequirement">Add Requirement</button>
         </div>
       </div>
     </div>
 
     <requirement-editor-modal />
+    <copy-requirement-modal />
 
     <requirement-list-item
       v-for="requirement in requirements"
@@ -28,6 +31,7 @@ import { Options, Vue } from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import { RequirementModel } from '@/models/achievements/requirement';
+import CopyRequirementModal from './CopyRequirementModal.vue';
 import RequirementEditorModal from './RequirementEditorModal.vue';
 import RequirementListItem from './RequirementListItem.vue';
 
@@ -35,6 +39,7 @@ const editAchievementModule = namespace('editAchievement');
 
 @Options({
   components: {
+    CopyRequirementModal,
     RequirementEditorModal,
     RequirementListItem,
   },

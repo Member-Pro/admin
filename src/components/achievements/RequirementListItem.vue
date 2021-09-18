@@ -9,7 +9,7 @@
       <div class="right">
         <div class="level-item">
           <div class="buttons">
-            <button class="button is-light">Copy</button>
+            <button class="button is-light" @click="copy">Copy</button>
             <button class="button is-light" @click="edit">Edit</button>
             <button class="button is-danger is-light" @click="deleteReq">Delete</button>
           </div>
@@ -22,9 +22,7 @@
     </p>
 
     <div class="validation-parameters px-4">
-      <h5 class="mb-2">Validation Parameters</h5>
-
-      <requirement-param-table :requirement="requirement" />
+      <validation-parameters :requirement="requirement" />
     </div>
   </div>
 </template>
@@ -34,24 +32,31 @@ import { Options, Vue } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import { RequirementModel } from '@/models/achievements/requirement';
-import RequirementParamTable from './RequirementParamTable.vue';
+import ValidationParameters from './ValidationParameters.vue';
 
 const editAchievementModule = namespace('editAchievement');
 
 @Options({
   components: {
-    RequirementParamTable,
+    ValidationParameters,
   },
 })
 export default class RequirementListItem extends Vue {
   @Prop({ required: true })
   requirement!: RequirementModel;
 
+  @editAchievementModule.Action('copyRequirement')
+  copyRequirement!: any;
+
   @editAchievementModule.Action('editRequirement')
   editRequirement!: any;
 
   @editAchievementModule.Action('deleteRequirement')
   deleteRequirement!: any;
+
+  copy() {
+    this.copyRequirement({ requirement: this.requirement });
+  }
 
   edit() {
     this.editRequirement({ requirementId: this.requirement.id });

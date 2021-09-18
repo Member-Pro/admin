@@ -33,6 +33,8 @@ interface EditAchevementState {
 
   showEditRequirementModal: boolean;
   editingRequirement: RequirementModel | null;
+
+  showCopyRequirementModal: boolean;
 }
 
 const state: EditAchevementState = {
@@ -46,6 +48,8 @@ const state: EditAchevementState = {
 
   showEditRequirementModal: false,
   editingRequirement: getDefaultEditRequirementModel(),
+
+  showCopyRequirementModal: false,
 };
 
 const getters = {
@@ -59,6 +63,8 @@ const getters = {
 
   showEditRequirementModal: (state: EditAchevementState) => state.showEditRequirementModal,
   editingRequirement: (state: EditAchevementState) => state.editingRequirement,
+
+  showCopyRequirementModal: (state: EditAchevementState) => state.showCopyRequirementModal,
 };
 
 const mutations = {
@@ -92,6 +98,10 @@ const mutations = {
 
   SET_EDITING_REQUIREMENT(state: EditAchevementState, value: RequirementModel | null) {
     state.editingRequirement = value;
+  },
+
+  SET_SHOW_COPY_REQUIREMENT_MODAL(state: EditAchevementState, value: boolean) {
+    state.showCopyRequirementModal = value;
   },
 };
 
@@ -152,7 +162,11 @@ const actions = {
       await achievementRequirementService.update(state.editingRequirement);
     }
 
-    dispatch('closeRequirementEditor');
+    if (state.showEditRequirementModal) {
+      dispatch('closeRequirementEditor');
+    } else if (state.showCopyRequirementModal) {
+      dispatch('closeCopyModal');
+    }
   },
 
   async deleteRequirement({ commit, state }: CommitStateFunction<EditAchevementState>, { requirementId } : { requirementId: number }): Promise<void> {
@@ -176,6 +190,20 @@ const actions = {
 
   closeRequirementEditor({ commit }): void {
     commit('SET_SHOW_EDIT_REQUIREMENT_MODAL', false);
+    commit('SET_EDITING_REQUIREMENT', {} as RequirementModel);
+  },
+
+  copyRequirement({ commit }, { requirement }: { requirement: RequirementModel }): void {
+    const copyRequirement = { ...requirement };
+    // Reset props that shouldn't be copied
+    copyRequirement.id = 0; // will make the requirement 'new'
+
+    commit('SET_SHOW_COPY_REQUIREMENT_MODAL', true);
+    commit('SET_EDITING_REQUIREMENT', copyRequirement);
+  },
+
+  closeCopyModal({ commit }): void {
+    commit('SET_SHOW_COPY_REQUIREMENT_MODAL', false);
     commit('SET_EDITING_REQUIREMENT', {} as RequirementModel);
   },
 };
