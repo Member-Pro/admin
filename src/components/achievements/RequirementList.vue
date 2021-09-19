@@ -10,7 +10,14 @@
       </div>
       <div class="right">
         <div class="level-item">
-          <button class="button is-success" @click.prevent="addRequirement">Add Requirement</button>
+          <button class="button is-success" @click.prevent="addRequirement">
+            <span class="icon">
+              <fa-icon icon="plus" />
+            </span>
+            <span>
+              Add Requirement
+            </span>
+          </button>
         </div>
       </div>
     </div>

@@ -2,6 +2,11 @@
   <div class="copy-requirement-modal-wrapper">
     <form @submit.prevent="save">
       <card-modal :visible="showCopyRequirementModal" :title="title" submitButtonText="Copy Requirement" @close="close">
+        <p class="content">
+          This will copy all properties of the requirement, including the validation parameters. All can be changed after
+          saving the copy.
+        </p>
+
         <text-box
           type="text"
           fieldId="requirement-name"

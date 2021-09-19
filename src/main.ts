@@ -1,5 +1,10 @@
 import { createApp } from 'vue';
 import { Auth } from 'aws-amplify';
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faCopy, faPencilAlt, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -13,6 +18,10 @@ const app = createApp(App)
   .use(router);
 
 app.config.globalProperties.$filters = filters;
+
+library.add(faCopy, faPencilAlt, faPlus, faTrash);
+
+app.component('fa-icon', FontAwesomeIcon);
 
 app.mount('#app');
 

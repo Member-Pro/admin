@@ -9,9 +9,15 @@
       <div class="right">
         <div class="level-item">
           <div class="buttons">
-            <button class="button is-light" @click="copy">Copy</button>
-            <button class="button is-light" @click="edit">Edit</button>
-            <button class="button is-danger is-light" @click="deleteReq">Delete</button>
+            <button class="button is-light" @click="copy" title="Copy this requirement">
+              <fa-icon icon="copy" />
+            </button>
+            <button class="button is-light" @click="edit" title="Edit this requirement">
+              <fa-icon icon="pencil-alt" />
+            </button>
+            <button class="button is-danger is-light" @click="deleteReq" title="Delete this requirement">
+              <fa-icon icon="trash" />
+            </button>
           </div>
         </div>
       </div>
