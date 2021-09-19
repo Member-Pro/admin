@@ -1,18 +1,19 @@
 <template>
   <table class="table is-striped is-fullwidth">
     <thead>
-      <th>Name/Description</th>
+      <th>Name</th>
+      <th>Description</th>
       <th>Input Type</th>
       <th>Validation</th>
-      <th></th>
+      <!-- <th></th> -->
     </thead>
     <tbody>
       <tr v-for="param in requirement.validationParameters" :key="param.key">
         <td>
           {{ param.name }}
-          <small v-if="param.description" class="has-text-grey-light">
-            <br />{{ param.description }}
-          </small>
+        </td>
+        <td>
+          {{ param.description }}
         </td>
         <td>
           {{ param.inputType }}
@@ -26,12 +27,12 @@
             Max: {{ param.maximum }}
           </p>
         </td>
-        <td>
+        <!-- <td>
           <div class="buttons">
             <button class="button is-small is-light">Edit</button>
             <button class="button is-small is-danger">Delete</button>
           </div>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>
