@@ -22,6 +22,20 @@ const getDefaultEditRequirementModel = (): RequirementModel => {
     maxCount: null,
   };
 };
+
+const getDefaultEditComponentModel = (): AchievementComponentModel => {
+  return {
+    id: 0,
+    achievementId: 0,
+    name: '',
+    description: '',
+    displayOrder: 1,
+    isDisabled: false,
+    createdOn: '',
+    updatedOn: '',
+    requirements: [],
+  };
+};
 interface EditAchevementState {
   isLoading: boolean;
   isSaving: boolean;
@@ -30,6 +44,9 @@ interface EditAchevementState {
   components: AchievementComponentModel[];
   component: AchievementComponentModel | null;
   requirements: RequirementModel[];
+
+  showEditComponentModal: boolean;
+  editingComponent: AchievementComponentModel | null;
 
   showEditRequirementModal: boolean;
   editingRequirement: RequirementModel | null;
@@ -46,6 +63,9 @@ const state: EditAchevementState = {
   component: null,
   requirements: [],
 
+  showEditComponentModal: false,
+  editingComponent: getDefaultEditComponentModel(),
+
   showEditRequirementModal: false,
   editingRequirement: getDefaultEditRequirementModel(),
 
@@ -60,6 +80,9 @@ const getters = {
   components: (state: EditAchevementState) => state.components,
   component: (state: EditAchevementState) => state.component,
   requirements: (state: EditAchevementState) => orderBy(state.requirements, [ 'displayOrder' ]),
+
+  showEditComponentModal: (state: EditAchevementState) => state.showEditComponentModal,
+  editingComponent: (state: EditAchevementState) => state.editingComponent,
 
   showEditRequirementModal: (state: EditAchevementState) => state.showEditRequirementModal,
   editingRequirement: (state: EditAchevementState) => state.editingRequirement,
@@ -88,8 +111,16 @@ const mutations = {
     state.component = value;
   },
 
+  SET_EDITING_COMPONENT(state: EditAchevementState, value: AchievementComponentModel | null) {
+    state.editingComponent = value;
+  },
+
   SET_REQUIREMENTS(state: EditAchevementState, value: RequirementModel[]) {
     state.requirements = value;
+  },
+
+  SET_SHOW_EDIT_COMPONENT_MODAL(state: EditAchevementState, value: boolean) {
+    state.showEditComponentModal = value;
   },
 
   SET_SHOW_EDIT_REQUIREMENT_MODAL(state: EditAchevementState, value: boolean) {
@@ -138,6 +169,39 @@ const actions = {
     commit('SET_REQUIREMENTS', requirements);
 
     commit('SET_IS_LOADING', false);
+  },
+
+  async saveComponent({ commit, dispatch, state }: { commit: any, dispatch: any, state: EditAchevementState }): Promise<void> {
+    if (state.editingComponent?.id === 0) {
+      state.editingComponent.achievementId = state.achievement?.id ?? 0;
+      const newComponent = await achievementComponentService.create(state.editingComponent);
+
+      // Add the new component to state
+      commit('SET_COMPONENTS', [ ...state.components, newComponent ]);
+    } else if (state.editingComponent) {
+      await achievementComponentService.update(state.editingComponent);
+
+      // TODO: would be nice to update the component list so names are updated
+    }
+
+    if (state.showEditComponentModal) {
+      dispatch('closeComponentEditor');
+    }
+  },
+
+  addComponent({ commit }): void {
+    commit('SET_SHOW_EDIT_COMPONENT_MODAL', true);
+    commit('SET_EDITING_COMPONENT', getDefaultEditComponentModel());
+  },
+
+  editComponent({ commit }, { component }: { component: AchievementComponentModel }): void {
+    commit('SET_SHOW_EDIT_COMPONENT_MODAL', true);
+    commit('SET_EDITING_COMPONENT', component);
+  },
+
+  closeComponentEditor({ commit }): void {
+    commit('SET_SHOW_EDIT_COMPONENT_MODAL', false);
+    // commit('SET_EDITING_COMPONENT', {} as RequirementModel);
   },
 
   async loadRequirements({ commit }, { componentId }: { componentId: number }): Promise<void> {

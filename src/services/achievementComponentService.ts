@@ -15,4 +15,16 @@ export default {
     const components = response.data as AchievementComponentModel[];
     return components;
   },
+
+  async create(model: AchievementComponentModel): Promise<AchievementComponentModel> {
+    const response = await api.post(`achievements/${model.achievementId}/components`, model);
+
+    return response.data as AchievementComponentModel;
+  },
+
+  async update(model: AchievementComponentModel): Promise<AchievementComponentModel> {
+    await api.put(`achievements/${model.achievementId}/components/${model.id}`, model);
+
+    return model; // TODO: Probably should have this returned from the PUT request?
+  },
 };

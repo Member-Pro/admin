@@ -1,6 +1,6 @@
 <template>
   <div class="requirement-validation-parameters">
-    <h5 class="mb-2">Validation Parameters</h5>
+    <h4 class="mb-2">Validation Parameters</h4>
 
     <requirement-param-table :requirement="requirement" />
 

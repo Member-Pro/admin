@@ -12,6 +12,12 @@
         </li>
       </ul>
     </aside>
+
+    <div class="actions my-4">
+      <button type="button" class="button is-success" @click="addComponent">
+        Add Component
+      </button>
+    </div>
   </div>
 </template>
 
@@ -31,5 +37,7 @@ export default class ComponentName extends Vue {
 
   @editAchievementModule.Getter('components')
   components!: AchievementComponentModel[];
+
+  @editAchievementModule.Action('addComponent') addComponent!: any;
 }
 </script>

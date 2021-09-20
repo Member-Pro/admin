@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <p class="block has-text-grey-light">
+    <p class="content">
       {{ requirement.description ? requirement.description : '<i>No description</i>' }}
     </p>
 
