@@ -77,7 +77,7 @@ const getters = {
   isSaving: (state: EditAchevementState) => state.isSaving,
 
   achievement: (state: EditAchevementState) => state.achievement,
-  components: (state: EditAchevementState) => state.components,
+  components: (state: EditAchevementState) => orderBy(state.components, [ 'displayOrder' ]),
   component: (state: EditAchevementState) => state.component,
   requirements: (state: EditAchevementState) => orderBy(state.requirements, [ 'displayOrder' ]),
 
@@ -181,7 +181,12 @@ const actions = {
     } else if (state.editingComponent) {
       await achievementComponentService.update(state.editingComponent);
 
-      // TODO: would be nice to update the component list so names are updated
+      // Kind of a hacky way to update the components in the store list
+      const updatedComponentList = [
+        ...state.components.filter(x => x.id !== state.editingComponent?.id),
+        state.editingComponent,
+      ];
+      commit('SET_COMPONENTS', updatedComponentList);
     }
 
     if (state.showEditComponentModal) {

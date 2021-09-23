@@ -8,6 +8,9 @@
             :to="{ name: 'achievementEditComponentDetails', params: { achievementId: achievementId, componentId: component.id } }"
           >
             {{ component.name }}
+            <span v-if="component.isDisabled" class="tag is-warning is-light is-normal">
+              Disabled
+            </span>
           </router-link>
         </li>
       </ul>

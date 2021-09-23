@@ -27,6 +27,12 @@
           v-model="model.displayOrder"
           autocomplete="off"
         />
+
+        <checkbox
+          :fieldId="component-isDisabled"
+          label="Disabled"
+          v-model="model.isDisabled"
+        />
       </card-modal>
     </form>
   </div>
@@ -36,6 +42,7 @@
 import { Options, Vue } from 'vue-class-component';
 import { namespace } from 'vuex-class';
 import CardModal from '@/components/common/CardModal.vue';
+import Checkbox from '@/components/forms/CheckBox.vue';
 import TextArea from '@/components/forms/TextArea.vue';
 import TextBox from '@/components/forms/TextBox.vue';
 import { AchievementComponentModel } from '@/models/achievements/achievementComponent';
@@ -44,6 +51,7 @@ const editAchievementModule = namespace('editAchievement');
 @Options({
   components: {
     CardModal,
+    Checkbox,
     TextArea,
     TextBox,
   },
